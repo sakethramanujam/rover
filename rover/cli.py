@@ -1,7 +1,7 @@
 import click
 import os
 from rover.rover.tools import n_pages
-from .rover.main import show_missions, show_downlink_status, show_stats, get_cameras, download_images
+from .rover.main import show_missions, show_downlink_status, show_stats, get_cameras, downloader
 
 
 @click.group()
@@ -69,16 +69,20 @@ def download():
 @click.argument("mission")
 @click.option('-r', '--resolution', type=str,
               default="full", show_default=True,
-              help="resolution of the images to be download.")
+              help="resolution of the images to be download.\
+                   Available options: small, medium, large, full")
 @click.option('-p', '--path',
               default="./", show_default=True,
               help="path to store the downloaded images.")
-@ click.option('-n', '--npages', type=int,
-               default=1, show_default=True,
-               help="number of pages to download the images from.")
-def imgs(mission, resolution, path, npages):
-    download_images(mission_id=mission,
-                    path=path,
-                    resolution=resolution,
-                    npages=npages
-                    )
+@click.option('-pn', '--pagenum', type=int, show_default=True,
+              help="value of the page to download images from.")
+@click.option('-np', '--npages', type=int, show_default=True,
+              help="number of pages to download the images from.")
+def imgs(mission, resolution, path, pagenum, npages):
+    downloader(mission_id=mission,
+               what="images",
+               path=path,
+               resolution=resolution,
+               pagenum=pagenum,
+               npages=npages
+               )

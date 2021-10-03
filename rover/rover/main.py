@@ -54,10 +54,12 @@ def get_cameras(mission_id: str, what: str):
         return 0
 
 
-def download_images(mission_id: str,  **config):
+def downloader(mission_id: str, what:str, **config):
     if not mission_exists(mission_id=mission_id):
         return 1
     rover = create_rover(mission_id=mission_id, **config)
-    rover.download_images()
-
+    if what=="images":
+        rover.download_images()
+    elif what=="metadata":
+        raise NotImplementedError
     
