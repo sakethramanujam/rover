@@ -123,7 +123,7 @@ class Rover:
         self._image_download_wrapper(pagenums)
 
     def _metadata_download_wrapper(self, pagenums):
-        filepath = os.path.join(self.basepath, self.id, self.resolution)
+        filepath = os.path.join(self.basepath, self.id)
         if not os.path.exists:
             os.makedirs(filepath)
         try:
