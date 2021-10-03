@@ -133,7 +133,7 @@ class Rover:
                 il = self._get_image_list(url=url)
                 dfs.append(pd.json_normalize(il, sep="_"))
             df = pd.concat(dfs) 
-            fn = os.path.join(filepath, f"{len(pagenums)}_metadata_at_{give_me_time}.xlsx")
+            fn = os.path.join(filepath, f"{len(pagenums)}_metadata_at_{give_me_time()}.xlsx")
             df.reset_index(drop=True).to_excel(fn,index=False)
         except KeyboardInterrupt:
             print("Keyboard interrupt occured, stopping download operation!")
