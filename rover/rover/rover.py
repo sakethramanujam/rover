@@ -124,11 +124,12 @@ class Rover:
 
     def _metadata_download_wrapper(self, pagenums):
         filepath = os.path.join(self.basepath, self.id)
-        if not os.path.exists:
+        if not os.path.exists(filepath):
             os.makedirs(filepath)
         try:
             dfs = []
             for pagenum in pagenums:
+                print(f"Downloading metadata from page:{pagenum}")
                 url = self._get_stub(pagenum=pagenum)
                 il = self._get_image_list(url=url)
                 dfs.append(pd.json_normalize(il, sep="_"))
