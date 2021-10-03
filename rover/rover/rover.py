@@ -25,7 +25,7 @@ class Rover:
         self.name = MISSIONS.get(self.id)["name"]
         self.resolution_name = config.get("resolution")
         self.resolution = MISSIONS.get(
-            self.id)['resolutions'][self.resolution_name]
+            self.id)['resolutions'][self.resolution_name] if self.resolution_name else 'full'
         self.basepath = config.get("path")
         self.pagenum = config.get("pagenum")
         self.npages = config.get("npages")
