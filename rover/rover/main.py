@@ -1,13 +1,6 @@
-from .tools import get
+from .tools import get, checkpath, mission_exists
 from .config import MISSIONS
-from .tools import checkpath
-
-
-def mission_exists(mission_id: str) -> bool:
-    if mission_id not in MISSIONS.keys():
-        print(f"{mission_id} doesn't exist")
-        return False
-    return True
+from .rover import create_rover 
 
 
 def show_missions():
@@ -61,14 +54,10 @@ def get_cameras(mission_id: str, what: str):
         return 0
 
 
-def download(mission_id: str,
-             path: str,
-             resolution: int = "full",
-             ):
+def download_images(mission_id: str,  **config):
     if not mission_exists(mission_id=mission_id):
         return 1
-    if not path or path==None:
-        print(f"storage path not found, saving to current ./{mission_id}")
-        path = f"./{mission_id}"
+    rover = create_rover(mission_id=mission_id, **config)
+    rover.download_images()
 
     

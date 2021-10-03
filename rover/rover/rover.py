@@ -1,38 +1,34 @@
 import os
-from requests.models import Response
 import shutil
-from .tools import checkpath, get, n_pages
+from .tools import checkpath, get, n_pages, mission_exists
 from .config import MISSIONS
 from .version import __version__ as version
 
 
-def create_rover(mission:str):
+def create_rover(mission_id: str, **config):
     """
         Verifies input parameters, creates rover object
     """
-    missions = MISSIONS.keys()
-    if mission not in missions:
-        raise Exception(f"Specified mission '{mission}' doesn't exist/inactive.")
-    else:
-        return Rover(mission)
-
+    return Rover(mission_id, **config)
 
 
 class Rover:
-    __attrs__= ["resolution", "basepath", "page_num"]
+    __attrs__ = ["resolution", "path", "page_num", "cameras", ""]
 
-    def __init__(self, **config):
-        self.init(**config)
+    def __init__(self, mission_id:str, **config):
+        self.init(mission_id=mission_id,**config)
 
-    def init(self, **config):
+    def init(self, mission_id:str, **config):
+        self.id = mission_id
+        self.name = MISSIONS.get(self.id)["name"]
         self.resolution_name = config.get("resolution")
-        self.resolution = RESOLUTIONS.get(self.resolution_name)
-        self.basepath = config.get("basepath")
-        self.page_num = config.get("page_num")
-        self.format = IMAGE_FORMATS.get(self.resolution_name)
+        self.resolution = MISSIONS.get(self.id)['resolutions'][self.resolution_name]
+        self.basepath = config.get("path")
+        self.page_num = config.get("npages")
+        self.format = MISSIONS.get(self.id)['formats'][self.resolution_name]
 
     def __repr__(self):
-        return(f"Percy Image Downloader Ver:{version}")
+        return(f"<{self.name}:{version}>")
 
     def _download_image(self, image_url: str):
         try:
@@ -42,7 +38,7 @@ class Rover:
             print(f"Exception {e}")
 
     def _saveimage(self,
-                   image_data: Response,
+                   image_data,
                    filename: str):
         with open(filename, 'wb') as img:
             shutil.copyfileobj(image_data.raw, img)
@@ -59,26 +55,26 @@ class Rover:
         """
         Takes large, medium, small, fullres
         """
-        resolution = self.resolution
         urls = []
         ids = []
         for item in imagelist:
-            urls.append(item["image_files"][resolution])
+            urls.append(item["image_files"][self.resolution])
             ids.append(item["imageid"])
         return urls, ids
 
-    def download(self):
+    def download_images(self):
         """
         Parses through all of the pages and downloads images
         """
         resolution = self.resolution
         basepath = self.basepath
         page_num = self.page_num
-        filepath = os.path.join(basepath, resolution)
-        checkpath(filepath)
-        url = f"https://mars.nasa.gov/rss/api/?feed=raw_images&category={mission_id}&feedtype=json&num=50&page={page_num}&order=sol+desc&&&undefined"
-        if page_num > 1:     # todo: make range dynamic
-            url = f"https://mars.nasa.gov/rss/api/?feed=raw_images&category={mission_id}&feedtype=json&num=50&page={page_num}&order=sol+desc&&&extended="
+        filepath = os.path.join(basepath, self.id, resolution)
+        if not checkpath(filepath):
+            os.makedirs(filepath)
+        url = f"https://mars.nasa.gov/rss/api/?feed=raw_images&category={self.id}&feedtype=json&num=50&page={page_num}&order=sol+desc&&&undefined"
+        if page_num > 1:
+            url = f"https://mars.nasa.gov/rss/api/?feed=raw_images&category={self.id}&feedtype=json&num=50&page={page_num}&order=sol+desc&&&extended="
 
         print(
             f"Fetching images with resolution: {self.resolution_name}, from page:{page_num}")

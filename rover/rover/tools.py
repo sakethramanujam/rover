@@ -1,6 +1,12 @@
 import os
 import requests
+from .config import MISSIONS
 
+def mission_exists(mission_id: str) -> bool:
+    if mission_id not in MISSIONS.keys():
+        print(f"{mission_id} doesn't exist")
+        return False
+    return True
 
 def n_pages(stats_url:str):
     """
@@ -15,14 +21,14 @@ def n_pages(stats_url:str):
         print(f"Error: {e}")
 
 
-def checkpath(*paths: list):
+def checkpath(path: str) -> bool:
     """
     Checks if a give path exists
     Creates dirs if doesn't exist
     """
-    for path in paths:
-        if not os.path.exists(path):
-            os.makedirs(path)
+    if not os.path.exists(path):
+        return False
+    return True
 
 
 def get(url: str, **kwargs):

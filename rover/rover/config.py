@@ -45,13 +45,19 @@ MISSIONS = {
         "status_url":"https://mars.nasa.gov/mars_relay_items/?lander=MSL",
         "stats_url":"https://mars.nasa.gov/rss/api/?feed=raw_images&category=msl&feedtype=json&latest=true",
         "cameras":{
-
+            "CHEMCAM_RMI": "Chemistry & Camera (ChemCam)"
         },
-        "resolutions":{
-
+        "resolutions" : {
+            "full": "full_res",
+            "large": "large",
+            "medium": "medium",
+            "small": "small"
         },
-        "formats":{
-
+        "formats" : {
+            "full": "png",
+            "large": "jpg",
+            "medium": "jpg",
+            "small": "jpg"
         }
     }
 }
