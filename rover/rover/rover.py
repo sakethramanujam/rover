@@ -29,7 +29,6 @@ class Rover:
         self.basepath = config.get("path")
         self.pagenum = config.get("pagenum")
         self.npages = config.get("npages")
-        self.format = MISSIONS.get(self.id)['formats'][self.resolution_name]
 
     def __repr__(self):
         return(f"<{self.name}:{version}>")
@@ -76,6 +75,7 @@ class Rover:
         return url
 
     def _image_download_wrapper(self, pagenums):
+        format = MISSIONS.get(self.id)['formats'][self.resolution_name]
         filepath = os.path.join(self.basepath, self.id, self.resolution)
         if not checkpath(filepath):
             os.makedirs(filepath)
@@ -89,8 +89,8 @@ class Rover:
                 for u, _id in zip(urls, ids):
                     try:
                         image_data = self._get_image_data(image_url=u)
-                        filename = os.path.join(filepath, f"{_id}.{self.format}")
-                        print(f"Now saving:{_id}.{self.format}")
+                        filename = os.path.join(filepath, f"{_id}.{format}")
+                        print(f"Now saving:{_id}.{format}")
                         self._write_image(image_data=image_data,
                                         filename=filename)
                     except Exception as e:
