@@ -142,4 +142,4 @@ class Rover:
 
     def download_metadata(self):
         pagenums = self._pages_to_download()
-        raise self._metadata_download_wrapper(pagenums=pagenums)
+        self._metadata_download_wrapper(pagenums=pagenums)
