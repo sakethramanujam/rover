@@ -1,6 +1,7 @@
 import os
 import requests
 from .config import MISSIONS
+from datetime import datetime as dt 
 
 def mission_exists(mission_id: str) -> bool:
     if mission_id not in MISSIONS.keys():
@@ -41,3 +42,10 @@ def get(url: str, **kwargs):
     else:
         raise Exception(
             f"Network Exception, failed to fetch requested page {url}")
+
+def give_me_time():
+    """
+    Creates a timestamp with current system time
+    used in metadata updation and filenames
+    """
+    return dt.strftime(dt.now(), '%Y-%m-%d-%H_%M_%S')

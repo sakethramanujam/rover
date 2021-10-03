@@ -3,7 +3,7 @@ import shutil
 from .tools import checkpath, get, n_pages, give_me_time
 from .config import MISSIONS
 from .version import __version__ as version
-
+import pandas as pd
 
 def create_rover(mission_id: str, **config):
     """
@@ -122,3 +122,24 @@ class Rover:
         pagenums = self._pages_to_download()
         self._image_download_wrapper(pagenums)
 
+    def _metadata_download_wrapper(self, pagenums):
+        filepath = os.path.join(self.basepath, self.id, self.resolution)
+        if not os.path.exists:
+            os.makedirs(filepath)
+        try:
+            dfs = []
+            for pagenum in pagenums:
+                url = self._get_stub(pagenum=pagenum)
+                il = self._get_image_list(url=url)
+                dfs.append(pd.json_normalize(il, sep="_"))
+            df = pd.concat(dfs) 
+            fn = os.path.join(filepath, f"{len(pagenum)}_metadata_at_{give_me_time}.xlsx")
+            df.reset_index(drop=True).to_excel(fn,index=False)
+        except KeyboardInterrupt:
+            print("Keyboard interrupt occured, stopping download operation!")
+            return 1
+        return 0
+
+    def download_metadata(self):
+        pagenums = self._pages_to_download()
+        raise self._metadata_download_wrapper(pagenums=pagenums)

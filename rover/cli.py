@@ -86,3 +86,20 @@ def imgs(mission, resolution, path, pagenum, npages):
                pagenum=pagenum,
                npages=npages
                )
+
+@download.command("metadata", help="download metadata.")
+@click.argument("mission")
+@click.option('-p', '--path',
+              default="./", show_default=True,
+              help="path to store the downloaded images.")
+@click.option('-pn', '--pagenum', type=int, show_default=True,
+              help="value of the page to download images from.")
+@click.option('-np', '--npages', type=int, show_default=True,
+              help="number of pages to download the images from.")
+def meta(mission, path, pagenum, npages):
+    downloader(mission_id=mission,
+               what="metadata",
+               path=path,
+               pagenum=pagenum,
+               npages=npages
+               )

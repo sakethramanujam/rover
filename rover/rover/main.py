@@ -61,5 +61,5 @@ def downloader(mission_id: str, what:str, **config):
     if what=="images":
         rover.download_images()
     elif what=="metadata":
-        raise NotImplementedError
+        rover.download_metadata()
     
